@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Table } from 'react-bootstrap';
 
 import UserListElement from './UserListElement';
+import UserDelete from './UserDelete';
 
 class UserList extends React.Component{
 
   render(){
     return(
-      <table>
+      <div>
+      <Table bordered hover responsive striped>
         <thead>
           <tr>
             <th>id</th>
@@ -24,14 +27,16 @@ class UserList extends React.Component{
             );
           })}
         </tbody>
-      </table>
+      </Table>
+      <UserDelete/>
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
   return({
-    users: state.users,
+    users: state.users.list,
   });
 }
 export default connect(mapStateToProps)(UserList);

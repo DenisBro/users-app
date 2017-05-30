@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
+import './stylesheets/main.css';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import { reducers } from './reducers/index';
@@ -17,7 +18,9 @@ for(let i=1; i<10; i++){
 }
 
 const initial_state = {
-  users: users,
+  users:{ 
+        list: users,
+        }
 }
 
 const store = createStore(reducers, initial_state);
