@@ -32,7 +32,6 @@ if(process.env.NODE_ENV !== 'production'){
   middleware = composeWithDevTools(applyMiddleware(routerMiddleware(history)));
 }
 const store = createStore(reducers, initial_state, middleware);
-
 ReactDOM.render(
   <Provider store={ store }>
     <Router history={ history }>
