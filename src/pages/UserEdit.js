@@ -1,7 +1,8 @@
 import React from 'react';
-import { PageHeader, Form, FormGroup, Col, Button, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
+import { PageHeader, Form, FormGroup, Col, Button, FormControl, InputGroup, Glyphicon, HelpBlock } from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { goBack } from 'react-router-redux';
 
 class UserEdit extends React.Component {
   //current form type: add or edit
@@ -12,18 +13,20 @@ class UserEdit extends React.Component {
 
     //ste the current form type
     this.form_type = (props.initialValues.id > 0) ? "edit" : "add";
+
+    this.formSubmit = this.formSubmit.bind(this);
   }
 
   render() {
     return(
       <div>
         <PageHeader>{'edit'===this.form_type ? 'User edit' : 'User add'}</PageHeader>
-        <Form horizontal>
+        <Form horizontal onSubmit={this.props.handleSubmit(this.formSubmit)}>
           <Field name="username" component={UserEdit.renderUsername}/>
           <Field name="job" component={UserEdit.renderJob}/>
           <FormGroup>
             <Col smOffset={2} sm={2}>
-              <Button type="submit">Save User</Button>
+              <Button type="submit" disabled={this.props.invalid || this.props.submitting}>Save User</Button>
             </Col>
           </FormGroup>
         </Form>
@@ -32,13 +35,14 @@ class UserEdit extends React.Component {
   }
 
   static renderUsername(props) {
-  //  console.log(props)
     return(
-      <FormGroup>
+      <FormGroup validationState={!props.meta.touched ? null: (props.meta.error ? 'error' : 'success')}>
         <Col sm={2}>Username</Col>
         <Col sm={8}>
           <FormControl {...props.input} id="username" type="text"
             placeholder="Username"/>
+          <FormControl.Feedback/>
+          <HelpBlock>{props.meta.touched && props.meta.error ? props.meta.error : null}</HelpBlock>
         </Col>
       </FormGroup>
     );
@@ -59,15 +63,33 @@ class UserEdit extends React.Component {
       </FormGroup>
     );
   }
+  formSubmit(values) {
+    //add/edit the user
+    this.props.dispatch({
+      type: 'users.' + this.form_type, //add or edit
+      id: values.id,
+      username: values.username,
+      job: values.job,
+    });
+
+    //redirect to previous page
+    this.props.dispatch(goBack());
+  }
 }
 //decorate the form component, required with redux-form
 UserEdit = reduxForm({
   form: 'user_edit',
+  validate: function(values){
+    const errors = {};
+    if(!values.username) {
+      errors.username = 'Username is required';
+    }
+    return errors;
+  },
 })(UserEdit);
 
 //export the connected class
 function mapStateToPorps(state,own_props) {
-  //console.log(state.users.list)
   //set the form data
   let form_data = {
     id: 0,
@@ -75,8 +97,6 @@ function mapStateToPorps(state,own_props) {
     job: '',
   };
   for(const user of state.users.list) {
-     console.log(user)
-    // console.log(user)
     if(user.id === Number(own_props.match.params.id)) {
       form_data = user;
       break;

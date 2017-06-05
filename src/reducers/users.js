@@ -29,6 +29,31 @@ export default function users(state = {}, action){
         }
       }
       return new_state;
+
+    case 'users.add':
+      new_state = JSON.parse(JSON.stringify(state));
+      //generate a new id
+      const id = Number((Math.random()*1000000).toPrecision(6));
+      //add the user
+      new_state.list.push({
+        id: id,
+        username: action.username,
+        job: action.job,
+      });
+      return new_state;
+
+    case 'users.edit':
+    new_state = JSON.parse(JSON.stringify(state));
+      for(const user of new_state.list){
+        if(user.id === action.id){
+          Object.assign(user, {
+            username: action.username,
+            job: action.job,
+          });
+          break;
+        }
+      }
+      return new_state;
     default: return state;
   }
 }

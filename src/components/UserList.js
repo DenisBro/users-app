@@ -37,7 +37,7 @@ class UserList extends React.Component {
               return(
                 <UserListElement key={user.id} user={user}/>
               );
-            }
+            }else return null;
           })}
         </tbody>
       </Table>
