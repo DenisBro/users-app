@@ -20,7 +20,7 @@ export default function users(state = {}, action){
       }
       return new_state;
 
-    case 'userDelete':
+    case 'users.delete':
       new_state = JSON.parse(JSON.stringify(state));
       for(const index in new_state.list){
         if(new_state.list[index].id === action.id){
@@ -54,6 +54,12 @@ export default function users(state = {}, action){
         }
       }
       return new_state;
+    //the users list saga fetching was a success
+    case 'users.fetchListSuccess':
+      new_state = JSON.parse(JSON.stringify(state));
+      new_state.list = action.users;
+      return new_state;
+
     default: return state;
   }
 }

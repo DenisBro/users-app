@@ -31,9 +31,14 @@ class UserDelete extends React.Component{
   }
 
   userDelete(event){
-    //delete the user
+    //delete the user with the api
     this.props.dispatch({
-      type: 'userDelete',
+      type: 'usersDelete',
+      id: this.props.modal_delete.id,
+    });
+    //delete the user from the state
+    this.props.dispatch({
+      type: 'users.delete',
       id: this.props.modal_delete.id,
     });
     //hide the modal
