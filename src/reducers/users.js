@@ -32,8 +32,8 @@ export default function users(state = {}, action){
 
     case 'users.add':
       new_state = JSON.parse(JSON.stringify(state));
-      //generate a new id
-      const id = Number((Math.random()*1000000).toPrecision(6));
+      //set the user id or generate a new id
+      const id = action.id ? action.id : Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
       //add the user
       new_state.list.push({
         id: id,
